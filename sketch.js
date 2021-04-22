@@ -46,8 +46,19 @@ function draw() {
 
   //write code to read fedtime value from the database 
 
-  lastFed=database.ref('FeedTime')
-  lastFed.on('value', hour);
+  fedTime=database.ref('FeedTime'); 
+  fedTime.on("value",function(data){ 
+    lastFed=data.val(); 
+  }); 
+  fill(255,255,254); 
+  textSize(15); 
+  if(lastFed>=12){ 
+    text("Last Feed : "+ lastFed%12 + " PM", 350,30); 
+  }else if(lastFed==0){ 
+    text("Last Feed : 12 AM",350,30); 
+  }else{
+     text("Last Feed : "+ lastFed + " AM", 350,30); 
+    }
  
   //write code to display text lastFed time here
 console.log(feedTime)
@@ -62,7 +73,7 @@ function readStock(data){
 }
 
 
-function feedDog(){
+/*function feedDog(){
   dog.addImage(happyDog);
 
   //write code here to update food stock and last fed time
@@ -71,7 +82,22 @@ function feedDog(){
   lastFed.on('value', hour);
   console.log(feedTime)
   //console.log(lastFed);
-}
+}*/
+
+//function to update food stock and last fed time function 
+function feedDog(){ 
+  dog.addImage(happyDog); 
+  var food_stock_val = foodObj.getFoodStock(); 
+  if(food_stock_val <= 0){ 
+    foodObj.updateFoodStock(food_stock_val *0); 
+  }else{ 
+    foodObj.updateFoodStock(food_stock_val -1); 
+  } 
+
+  database.ref('/').update({ Food:foodObj.getFoodStock(), FeedTime:hour() }) 
+} 
+
+
 
 //function to add food in stock
 function addFoods(){
@@ -89,3 +115,4 @@ function hour(data){
 }
 
 //in the database it says "8"
+//function to update food stock and last fed time function feedDog(){ dog.addImage(happyDog); var food_stock_val = foodObj.getFoodStock(); if(food_stock_val <= 0){ foodObj.updateFoodStock(food_stock_val *0); }else{ foodObj.updateFoodStock(food_stock_val -1); } database.ref('/').update({ Food:foodObj.getFoodStock(), FeedTime:hour() }) } and in function draw (): fedTime=database.ref('FeedTime'); fedTime.on("value",function(data){ lastFed=data.val(); }); fill(255,255,254); textSize(15); if(lastFed>=12){ text("Last Feed : "+ lastFed%12 + " PM", 350,30); }else if(lastFed==0){ text("Last Feed : 12 AM",350,30); }else{ text("Last Feed : "+ lastFed + " AM", 350,30); }
